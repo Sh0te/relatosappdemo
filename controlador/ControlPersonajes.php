@@ -1,23 +1,24 @@
 <?php
 
-include_once ("modelo/Buscador.php");
-include_once ("Controlador.php");
+include_once("modelo/Buscador.php");
+include_once("Controlador.php");
 
 
 /* *******************************************************************************************
  
- * CLASE Controlador
+ * CLASE ControladorPersonajes
 
  * ***************************************************************************************** */
-
-class ControlPersonajes extends Controlador {
+class ControlPersonajes extends Controlador
+{
 
 
 	/* *******************************************************************************************
 	 * CONSTRUCTOR
 	 * ***************************************************************************************** */
-	
-	function __construct() {
+
+	function __construct()
+	{
 		parent::__construct();
 	}
 
@@ -25,43 +26,45 @@ class ControlPersonajes extends Controlador {
 
 	/* *******************************************************************************************
 	 * METODOS PRIVADOS
-	 * ***************************************************************************************** */	
-	
-	private function eliminarDirectorio($urlDirectorio) {
+	 * ***************************************************************************************** */
+
+	private function eliminarDirectorio($urlDirectorio)
+	{
 
 		// se comprueba si existe el directorio
 		if (file_exists($urlDirectorio)) {
 
 			// antes de eliminar el directorio hay que eliminar sus ficheros (imágenes)
-		    // se buscan los ficheros dentro del directorio
+			// se buscan los ficheros dentro del directorio
 			$arrFicheros = scandir($urlDirectorio);
 
-		    // por cada fichero se procede a su eliminación de forma recursiva
-		    foreach( $arrFicheros as $file ){
+			// por cada fichero se procede a su eliminación de forma recursiva
+			foreach ($arrFicheros as $file) {
 
 				// ¡ALERTA! Los ficheros '.' y '..' no se eliminan porque se eliminaría recursivamente	
-		    	if ($file != "." && $file != "..") {
+				if ($file != "." && $file != "..") {
 
-		    		// se elimina el fichero
-		    		unlink($urlDirectorio.$file);
-		        }
-		    }
+					// se elimina el fichero
+					unlink($urlDirectorio . $file);
+				}
+			}
 
-		    // una vez eliminados las imágenes del directorio, se elimina el directorio
-		    rmdir($urlDirectorio);
+			// una vez eliminados las imágenes del directorio, se elimina el directorio
+			rmdir($urlDirectorio);
 		}
 
 	}
 
 
-	private function crearJsonPersonajes($arrPersonajes, $numRegistros) {
+	private function crearJsonPersonajes($arrPersonajes, $numRegistros)
+	{
 
 		// se inicializa el array JSON
 		$arrJson = array();
 
 		// se recorre todo el array de personajes
 		foreach ($arrPersonajes as $personaje) {
-			
+
 			// se crea la siguiente personaje
 			$arrJson[] = array(
 				"id" => $personaje->getId(),
@@ -80,17 +83,18 @@ class ControlPersonajes extends Controlador {
 
 		// se devuelve el json
 		return $json;
-	}	
+	}
 
 
-	private function crearJsonPersonajeCaracteristicas($arrPersonajeCaracteristicas) {
+	private function crearJsonPersonajeCaracteristicas($arrPersonajeCaracteristicas)
+	{
 
 		// se inicializa el array JSON
 		$arrJson = array();
 
 		// se recorre todo el array de características
 		foreach ($arrPersonajeCaracteristicas as $caracteristica) {
-			
+
 			// se crea la siguiente caracteristica
 			$arrJson[] = array(
 				"id" => $caracteristica->getIdCaracteristica(),
@@ -104,17 +108,18 @@ class ControlPersonajes extends Controlador {
 
 		// se devuelve el json
 		return $json;
-	}	
+	}
 
 
-	private function crearJsonPersonajeRelaciones($arrPersonajeRelaciones, $numRegistros) {
+	private function crearJsonPersonajeRelaciones($arrPersonajeRelaciones, $numRegistros)
+	{
 
 		// se inicializa el array JSON
 		$arrJson = array();
 
 		// se recorre todo el array de características
 		foreach ($arrPersonajeRelaciones as $relacion) {
-			
+
 			// se crea la siguiente relacion
 			$arrJson[] = array(
 				"idRelacion" => $relacion->getIdRelacion(),
@@ -133,17 +138,18 @@ class ControlPersonajes extends Controlador {
 		// se devuelve el json
 		return $json;
 
-	}	
+	}
 
 
-	private function crearJsonPersonajeImagenes($arrPersonajeImagenes) {
+	private function crearJsonPersonajeImagenes($arrPersonajeImagenes)
+	{
 
 		// se inicializa el array JSON
 		$arrJson = array();
 
 		// se recorre todo el array de imágenes
 		foreach ($arrPersonajeImagenes as $imagen) {
-			
+
 			// se crea la siguiente imagen
 			$arrJson[] = array(
 				"idPersonaje" => $imagen->getIdPersonaje(),
@@ -162,9 +168,10 @@ class ControlPersonajes extends Controlador {
 
 	/* *******************************************************************************************
 	 * METODOS PUBLICOS
-	 * ***************************************************************************************** */	
+	 * ***************************************************************************************** */
 
-	public function abrirPersonajes() {
+	public function abrirPersonajes()
+	{
 
 		// se carga el buscador
 		$buscador = new Buscador();
@@ -181,7 +188,8 @@ class ControlPersonajes extends Controlador {
 	}
 
 
-	public function buscarPersonajes() {
+	public function buscarPersonajes()
+	{
 
 		// se recogen los parámetros de entrada
 		$nombre = $_POST['nombre'];
@@ -197,15 +205,15 @@ class ControlPersonajes extends Controlador {
 			$fecha = new DateTime();
 			$anyoActual = $fecha->format('Y');
 			$intAnyo = $anyoActual - $edad;
-			$anyo = $intAnyo.'-01-01';
+			$anyo = $intAnyo . '-01-01';
 		}
 
 		// se carga el buscador
 		$b = new Buscador();
-		
+
 		// se obtiene la cantidad de personajes que hay en total
 		$numRegistros = $b->numRegistros('personaje');
-		
+
 		// se buscan las personajes que cumplen con el filtro
 		$arrPersonajes = $b->buscarPersonajes($nombre, $nombreLargo, $sexo, $anyo);
 
@@ -213,12 +221,13 @@ class ControlPersonajes extends Controlador {
 		$jsonPersonajes = $this->crearJsonPersonajes($arrPersonajes, $numRegistros);
 
 		// se cdevuelve el json de personajes
-		echo $jsonPersonajes;		
+		echo $jsonPersonajes;
 
-	}	
+	}
 
 
-	public function crearPersonaje() {
+	public function crearPersonaje()
+	{
 
 		// se recogen los parámetros de entrada
 		$nombre = $_POST['nombre'];
@@ -235,7 +244,7 @@ class ControlPersonajes extends Controlador {
 			$fecha = new DateTime();
 			$anyoActual = $fecha->format('Y');
 			$intAnyo = $anyoActual - $edad;
-			$anyo = $intAnyo.'-01-01';
+			$anyo = $intAnyo . '-01-01';
 		}
 
 		// se instancia la personaje
@@ -254,17 +263,18 @@ class ControlPersonajes extends Controlador {
 		// se obtiene la cantidad de personajes que hay en total
 		$b->limitar(false);
 		$numRegistros = $b->numRegistros('personaje');
-		
+
 		// se codifica el array de personajes en un JSON
 		$jsonPersonajes = $this->crearJsonPersonajes($arrPersonajes, $numRegistros);
 
 		// se cdevuelve el json de personajes
-		echo $jsonPersonajes;			
+		echo $jsonPersonajes;
 
-	}	
+	}
 
 
-	public function actualizarPersonaje() {
+	public function actualizarPersonaje()
+	{
 
 		// se recogen los parámetros de entrada
 		$id = $_POST['id'];
@@ -277,7 +287,7 @@ class ControlPersonajes extends Controlador {
 		$fecha = new DateTime();
 		$anyoActual = $fecha->format('Y');
 		$intAnyo = $anyoActual - $edad;
-		$anyo = $intAnyo.'-01-01';
+		$anyo = $intAnyo . '-01-01';
 
 
 		// se instancia el personaje
@@ -292,7 +302,7 @@ class ControlPersonajes extends Controlador {
 		// se buscan las personajes sin filtro
 		$b->limitar(true);
 		$numRegistros = $b->numRegistros('personaje');
-		
+
 		// se buscan las personajes sin filtro
 		$arrPersonajes = $b->buscarPersonajes();
 
@@ -301,10 +311,11 @@ class ControlPersonajes extends Controlador {
 
 		// se cdevuelve el json de personajes
 		echo $jsonPersonajes;
-	}	
+	}
 
 
-	public function eliminarPersonaje() {
+	public function eliminarPersonaje()
+	{
 
 		// se recogen los parámetros de entrada
 		$id = $_POST['id'];
@@ -313,7 +324,7 @@ class ControlPersonajes extends Controlador {
 		$p = new Personaje($id);
 
 		// se crea la ura al directorio de imágenes del personaje
-		$urlDirectorio = self::urlImagenes.'p'.$p->getId().'/';
+		$urlDirectorio = self::urlImagenes . 'p' . $p->getId() . '/';
 
 		// se elimina el directorio de imágenes del personaje
 		$this->eliminarDirectorio($urlDirectorio);
@@ -328,9 +339,9 @@ class ControlPersonajes extends Controlador {
 		$b = new Buscador();
 
 		// se buscan las personajes sin filtro
-		$b->limitar(true);		
+		$b->limitar(true);
 		$numRegistros = $b->numRegistros('personaje');
-		
+
 		// se buscan las personajes sin filtro
 		$arrPersonajes = $b->buscarPersonajes();
 
@@ -338,7 +349,7 @@ class ControlPersonajes extends Controlador {
 		$jsonPersonajes = $this->crearJsonPersonajes($arrPersonajes, $numRegistros);
 
 		// se cdevuelve el json de personajes
-		echo $jsonPersonajes;				
+		echo $jsonPersonajes;
 
 	}
 }
