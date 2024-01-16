@@ -6,7 +6,7 @@ include_once("Controlador.php");
 
 /* *******************************************************************************************
  
- * CLASE ControladorPersonajes
+ * CLASE Controlador
 
  * ***************************************************************************************** */
 class ControlPersonajes extends Controlador
